@@ -5,15 +5,23 @@ import java.util.Scanner;
 public class HotelBooking {
 
 	public static String bookHotel(double money, int days, int rating) {
-
+		HotelDetail hotel;
+		HotelDetail lowestHotel = null;
+		double highestcost = Double.MAX_VALUE;
+		double cost;
 		for (int iterator = 0; iterator < list.size(); iterator++) {
-			HotelDetail hotel = (HotelDetail) list.get(iterator);
-			// int star = list.get(iterator).star;
-			double cost = hotel.totalCost(hotel.cost, days, hotel.offer);
-			if ((rating == hotel.star) && (money >= cost)) {
-				return String.format("Hotel Booked for %d days in %d star Hotel %s for the cost of %.2f", days,
-						hotel.star, hotel.name, cost);
+			hotel = (HotelDetail) list.get(iterator);
+			cost = hotel.totalCost(hotel.cost, days, hotel.offer);
+
+			if ((rating == hotel.star) && (cost < highestcost)) {
+				highestcost = cost;
+				lowestHotel = (HotelDetail) list.get(iterator);
 			}
+		}
+		if (highestcost <= money) {
+
+			return String.format("Hotel Booked for %d days in %d star Hotel %s for the cost of %.2f", days, rating,
+					(lowestHotel.name), highestcost);
 
 		}
 		return "Sorry! you dont have sufficient amount to book any hotel";
@@ -46,8 +54,7 @@ public class HotelBooking {
 			money = scan.nextDouble();
 			System.out.println("Enter how many days you are going to stay:");
 			days = scan.nextInt();
-			if(!(days>=1 && days<=31))
-			{
+			if (!(days >= 1 && days <= 31)) {
 				System.out.println("Please enter days between 1-31:");
 				days = scan.nextInt();
 			}
